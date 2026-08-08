@@ -263,6 +263,11 @@ void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
             .setErrorStr(&error)
             .create());
 
+    if (!executionengine) {
+        throw SymEngineException("LLVM EngineBuilder::create() failed: "
+                                 + error);
+    }
+
     // Customization point for subclasses: (may e.g. register custom symbol
     // resolver)
     modify_execution_engine(executionengine.get());
@@ -953,6 +958,11 @@ void LLVMVisitor::loads(const std::string &s)
             .setOptLevel(CodeGenOptLevel::Aggressive)
             .setErrorStr(&error)
             .create());
+
+    if (!executionengine) {
+        throw SymEngineException("LLVM EngineBuilder::create() failed: "
+                                 + error);
+    }
 
     // Customization point for subclasses: (may e.g. register custom symbol
     // resolver)
