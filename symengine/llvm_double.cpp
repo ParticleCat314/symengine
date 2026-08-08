@@ -31,6 +31,7 @@
 #include <algorithm>
 #include <cassert>
 #include <memory>
+#include <stdexcept>
 #include <vector>
 #include <fstream>
 
@@ -262,6 +263,11 @@ void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
             .setOptLevel(static_cast<CodeGenOptLevel>(opt_level))
             .setErrorStr(&error)
             .create());
+
+    if (!executionengine) {
+        throw std::runtime_error("LLVM EngineBuilder::create() failed: "
+                                 + error);
+    }
 
     // Customization point for subclasses: (may e.g. register custom symbol
     // resolver)
@@ -953,6 +959,11 @@ void LLVMVisitor::loads(const std::string &s)
             .setOptLevel(CodeGenOptLevel::Aggressive)
             .setErrorStr(&error)
             .create());
+
+    if (!executionengine) {
+        throw std::runtime_error("LLVM EngineBuilder::create() failed: "
+                                 + error);
+    }
 
     // Customization point for subclasses: (may e.g. register custom symbol
     // resolver)
